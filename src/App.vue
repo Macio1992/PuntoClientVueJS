@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="board">
-      <button v-if="players.length < 4" @click="generatePlayerName()">Generate name for you</button>
+      <button v-if="players.length < 4" @click="joinGame()">Join Game</button>
     </div>
     <div class="players">
       <ul class="playersList">
@@ -16,6 +16,7 @@
 
 <script>
   import io from "socket.io-client";
+  import env from './environment/environment';
 
   export default {
     name: "App",
@@ -23,21 +24,37 @@
       return {
         socket: {},
         players: [],
+        dictionary: {
+          CLIENT: {
+            JOIN_GAME: 'JoinGame'
+          },
+          SERVER: {
+            SEND_PLAYERS: 'SendPlayers'
+          }
+        }
       };
     },
     created() {
-      this.socket = io("http://localhost:3000");
+      const { SERVER_URL } = env;
+      this.socket = io(SERVER_URL);
     },
     mounted() {
-      this.socket.on("send players", (players) => {
+      const { SERVER } = this.dictionary;
+      const { SEND_PLAYERS } = SERVER;
+
+      this.socket.on(SEND_PLAYERS, players => {
         console.log("Players on client side ", players);
         this.players = players;
       });
     },
     methods: {
-      generatePlayerName() {
-        this.socket.emit("create player");
-        this.socket.on("send players", (players) => {
+      joinGame() {
+        const { SERVER, CLIENT } = this.dictionary;
+        const { SEND_PLAYERS } = SERVER;
+        const { JOIN_GAME } = CLIENT;
+
+        this.socket.emit(JOIN_GAME);
+        this.socket.on(SEND_PLAYERS, players => {
           console.log("Players on client side ", players);
           this.players = players;
         });
