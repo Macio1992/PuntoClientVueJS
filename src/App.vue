@@ -25,7 +25,7 @@ export default {
   name: "App",
   data() {
     return {
-      isMocked: true,
+      isMocked: false,
       socket: {},
       players: [],
       dictionary: {
