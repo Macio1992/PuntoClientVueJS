@@ -1,51 +1,33 @@
 @import './assets/styles/_colors.scss';
 
-body,
-html {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+body {
   margin: 0;
 }
 
 .main {
-  display: flex;
-
-  .board {
-    width: 75%;
-  }
   .players {
-    width: 25%;
-
     .playersList {
       list-style-type: none;
-      display: flex;
-      flex-wrap: wrap;
-      -webkit-flex-wrap: wrap;
       margin: 0;
       padding: 0;
 
       .player {
+        height: 100px;
+
         &.player--red {
           background-color: $red_color;
-          width: 50%;
-          height: 100px;
         }
 
         &.player--green {
           background-color: $green_color;
-          width: 50%;
-          height: 100px;
         }
 
         &.player--blue {
           background-color: $blue_color;
-          width: 50%;
-          height: 100px;
         }
 
         &.player--orange {
           background-color: $orange_color;
-          width: 50%;
-          height: 100px;
         }
       }
     }
