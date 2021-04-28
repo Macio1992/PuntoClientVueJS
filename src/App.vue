@@ -2,14 +2,23 @@
   <div class="container main">
     <div class="row">
       <div class="board col-8">
-        <button class="joinButton" v-if="players.length < 1" @click="joinGame()">Join Game</button>
+        <button
+          class="joinButton"
+          v-if="players.length < 1"
+          @click="joinGame()"
+        >
+          Join Game
+        </button>
       </div>
       <div class="players col-4" v-if="players.length > 0">
         <ul class="playersList row">
           <li
             v-for="player in players"
             :key="player.id"
-            :class="[`player player--${player.color} col-6`]">{{ player.playerName }}</li>
+            :class="[`player player--${player.color} col-6`]"
+          >
+            {{ player.playerName }}
+          </li>
         </ul>
       </div>
     </div>
@@ -44,7 +53,7 @@ export default {
     const { SERVER } = this.dictionary;
     const { SEND_PLAYERS } = SERVER;
 
-    this.socket.on(SEND_PLAYERS, players => {
+    this.socket.on(SEND_PLAYERS, (players) => {
       this.players = players;
     });
   },
@@ -55,7 +64,7 @@ export default {
       const { JOIN_GAME } = CLIENT;
 
       this.socket.emit(JOIN_GAME);
-      this.socket.on(SEND_PLAYERS, players => {
+      this.socket.on(SEND_PLAYERS, (players) => {
         this.players = players;
       });
     },
@@ -64,5 +73,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "App.scss";
+@import "App.scss";
 </style>

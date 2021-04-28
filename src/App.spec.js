@@ -12,6 +12,10 @@ jest.mock("socket.io-client", () => {
 });
 
 let mockSocket, endpoint;
+const FAKE_PLAYERS = [
+  { id: "id_1", playerName: "playerName-red", color: "red" },
+  { id: "id_2", playerName: "playerName-blue", color: "blue" },
+];
 
 beforeEach(() => {
   endpoint = "localhost:3000";
@@ -27,18 +31,14 @@ test("should render App and connect to socket io client and retrieve players on 
   expect(mockSocket.on).toHaveBeenCalledTimes(1);
   expect(mockSocket.on.mock.calls[0][0]).toEqual("SendPlayers");
 
-  mockSocket.on.mock.calls[0][1]([
-    { id: "id_1", playerName: "playerName-red", color: "red" }
-  ]);
+  mockSocket.on.mock.calls[0][1]([FAKE_PLAYERS[0]]);
 
   await wrapper.vm.$nextTick();
 
+  expect(wrapper.vm.players).toEqual([FAKE_PLAYERS[0]]);
   expect(wrapper.findAll(".player").length).toBe(1);
-  expect(wrapper.vm.players).toEqual([
-    { id: "id_1", playerName: "playerName-red", color: "red" }
-  ]);
   expect(wrapper.findAll(".player")[0].attributes().class).toContain(
-    "player player--red"
+    FAKE_PLAYERS[0].color
   );
 });
 
@@ -51,23 +51,17 @@ test("should emit joining to the game and retrieve joined players on button clic
   expect(mockSocket.on).toHaveBeenCalledTimes(2);
   expect(mockSocket.on.mock.calls[0][0]).toEqual("SendPlayers");
 
-  mockSocket.on.mock.calls[0][1]([
-    { id: "id_1", playerName: "playerName-red", color: "red" },
-    { id: "id_2", playerName: "playerName-blue", color: "blue" },
-  ]);
+  mockSocket.on.mock.calls[0][1]([FAKE_PLAYERS[0], FAKE_PLAYERS[1]]);
 
   await wrapper.vm.$nextTick();
 
   expect(wrapper.findAll(".player").length).toBe(2);
-  expect(wrapper.vm.players).toEqual([
-    { id: "id_1", playerName: "playerName-red", color: "red" },
-    { id: "id_2", playerName: "playerName-blue", color: "blue" },
-  ]);
+  expect(wrapper.vm.players).toEqual([FAKE_PLAYERS[0], FAKE_PLAYERS[1]]);
   expect(wrapper.findAll(".player")[0].attributes().class).toContain(
-    "player player--red"
+    FAKE_PLAYERS[0].color
   );
   expect(wrapper.findAll(".player")[1].attributes().class).toContain(
-    "player player--blue"
+    FAKE_PLAYERS[1].color
   );
 });
 
@@ -78,9 +72,7 @@ test("should hide join button when user has joined the game", async () => {
 
   await wrapper.find(".joinButton").trigger("click");
 
-  mockSocket.on.mock.calls[0][1]([
-    { id: "id_1", playerName: "playerName-red", color: "red" }
-  ]);
+  mockSocket.on.mock.calls[0][1]([FAKE_PLAYERS[0]]);
 
   await wrapper.vm.$nextTick();
 
