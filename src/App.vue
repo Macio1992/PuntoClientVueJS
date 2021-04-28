@@ -3,14 +3,13 @@
     <div class="row">
       <div class="board col-8">
         <button v-if="players.length < 4" @click="joinGame()">Join Game</button>
-        <h1>Maciej</h1>
       </div>
-      <div class="players col-4">
+      <div class="players col-4" v-if="players.length > 0">
         <ul class="playersList row">
           <li
             v-for="player in players"
             :key="player.id"
-            :class="[`player player--${player.color} col-6`]"></li>
+            :class="[`player player--${player.color} col-6`]">{{ player.playerName }}</li>
         </ul>
       </div>
     </div>
@@ -25,7 +24,6 @@ export default {
   name: "App",
   data() {
     return {
-      isMocked: false,
       socket: {},
       players: [],
       dictionary: {
@@ -39,23 +37,14 @@ export default {
     };
   },
   created() {
-    if (this.isMocked) {
-      return;
-    }
-
     const { SERVER_URL } = env;
     this.socket = io(SERVER_URL);
   },
   mounted() {
-    if (this.isMocked) {
-      return;
-    }
-
     const { SERVER } = this.dictionary;
     const { SEND_PLAYERS } = SERVER;
 
-    this.socket.on(SEND_PLAYERS, (players) => {
-      console.log("Players on client side ", players);
+    this.socket.on(SEND_PLAYERS, players => {
       this.players = players;
     });
   },
@@ -66,8 +55,7 @@ export default {
       const { JOIN_GAME } = CLIENT;
 
       this.socket.emit(JOIN_GAME);
-      this.socket.on(SEND_PLAYERS, (players) => {
-        console.log("Players on client side ", players);
+      this.socket.on(SEND_PLAYERS, players => {
         this.players = players;
       });
     },
@@ -76,5 +64,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "App.scss";
+  @import "App.scss";
 </style>
