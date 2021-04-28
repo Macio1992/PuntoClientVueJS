@@ -2,7 +2,7 @@
   <div class="container main">
     <div class="row">
       <div class="board col-8">
-        <button v-if="players.length < 4" @click="joinGame()">Join Game</button>
+        <button class="joinButton" v-if="players.length < 1" @click="joinGame()">Join Game</button>
       </div>
       <div class="players col-4" v-if="players.length > 0">
         <ul class="playersList row">

@@ -26,19 +26,26 @@ test("should render App and connect to socket io client and retrieve players on 
 
   expect(mockSocket.on).toHaveBeenCalledTimes(1);
   expect(mockSocket.on.mock.calls[0][0]).toEqual("SendPlayers");
+
   mockSocket.on.mock.calls[0][1]([
-    { id: "id_1", playerName: "playerName-red", color: "red" },
+    { id: "id_1", playerName: "playerName-red", color: "red" }
   ]);
+
   await wrapper.vm.$nextTick();
+
   expect(wrapper.findAll(".player").length).toBe(1);
   expect(wrapper.vm.players).toEqual([
-    { id: "id_1", playerName: "playerName-red", color: "red" },
+    { id: "id_1", playerName: "playerName-red", color: "red" }
   ]);
+  expect(wrapper.findAll(".player")[0].attributes().class).toContain(
+    "player player--red"
+  );
 });
 
 test("should emit joining to the game and retrieve joined players on button click", async () => {
   const wrapper = mount(App);
-  await wrapper.find("button").trigger("click");
+
+  await wrapper.find(".joinButton").trigger("click");
   expect(mockSocket.emit).toHaveBeenCalledWith("JoinGame");
   expect(mockSocket.emit).toHaveBeenCalledTimes(1);
   expect(mockSocket.on).toHaveBeenCalledTimes(2);
@@ -46,12 +53,36 @@ test("should emit joining to the game and retrieve joined players on button clic
 
   mockSocket.on.mock.calls[0][1]([
     { id: "id_1", playerName: "playerName-red", color: "red" },
-    { id: "id_2", playerName: "playerName-blue", color: "blue" }
+    { id: "id_2", playerName: "playerName-blue", color: "blue" },
   ]);
+
   await wrapper.vm.$nextTick();
+
   expect(wrapper.findAll(".player").length).toBe(2);
   expect(wrapper.vm.players).toEqual([
     { id: "id_1", playerName: "playerName-red", color: "red" },
-    { id: "id_2", playerName: "playerName-blue", color: "blue" }
+    { id: "id_2", playerName: "playerName-blue", color: "blue" },
   ]);
+  expect(wrapper.findAll(".player")[0].attributes().class).toContain(
+    "player player--red"
+  );
+  expect(wrapper.findAll(".player")[1].attributes().class).toContain(
+    "player player--blue"
+  );
+});
+
+test("should hide join button when user has joined the game", async () => {
+  const wrapper = mount(App);
+
+  expect(wrapper.findAll(".joinButton").length).toBe(1);
+
+  await wrapper.find(".joinButton").trigger("click");
+
+  mockSocket.on.mock.calls[0][1]([
+    { id: "id_1", playerName: "playerName-red", color: "red" }
+  ]);
+
+  await wrapper.vm.$nextTick();
+
+  expect(wrapper.findAll(".joinButton").length).toBe(0);
 });
