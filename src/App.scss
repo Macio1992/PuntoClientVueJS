@@ -1,0 +1,35 @@
+@import './assets/styles/_colors.scss';
+
+body {
+  margin: 0;
+}
+
+.main {
+  .players {
+    .playersList {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      .player {
+        height: 100px;
+
+        &.player--red {
+          background-color: $red_color;
+        }
+
+        &.player--green {
+          background-color: $green_color;
+        }
+
+        &.player--blue {
+          background-color: $blue_color;
+        }
+
+        &.player--orange {
+          background-color: $orange_color;
+        }
+      }
+    }
+  }
+}

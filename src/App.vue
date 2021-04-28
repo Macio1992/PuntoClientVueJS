@@ -1,70 +1,77 @@
 <template>
-  <h1>Hello Punto Game!</h1>
-  <button @click="generatePlayerName()">Generate name for you</button>
-  <div class="users">
-    <ul>
-      <li v-for="player in players" v-bind:key="player.id" :class="player.color">
-        {{ player.playerName }}
-      </li>
-    </ul>
+  <div class="container main">
+    <div class="row">
+      <div class="board col-8">
+        <button
+          class="joinButton"
+          v-if="players.length < 1"
+          @click="joinGame()"
+        >
+          Join Game
+        </button>
+      </div>
+      <div class="players col-4" v-if="players.length > 0">
+        <ul class="playersList row">
+          <li
+            v-for="player in players"
+            :key="player.id"
+            :class="[`player player--${player.color} col-6`]"
+          >
+            {{ player.playerName }}
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-  import io from 'socket.io-client';
+import io from "socket.io-client";
+import env from "./environment/environment";
 
-  export default {
-    name: 'App',
-    data() {
-      return {
-        socket: {},
-        players: []
-      }
-    },
-    created() {
-      this.socket = io('http://localhost:3000');
-    },
+export default {
+  name: "App",
+  data() {
+    return {
+      socket: {},
+      players: [],
+      dictionary: {
+        CLIENT: {
+          JOIN_GAME: "JoinGame",
+        },
+        SERVER: {
+          SEND_PLAYERS: "SendPlayers",
+        },
+      },
+    };
+  },
+  created() {
+    const { SERVER_URL } = env;
+    this.socket = io(SERVER_URL);
+  },
+  mounted() {
+    const { SERVER } = this.dictionary;
+    const { SEND_PLAYERS } = SERVER;
 
-    mounted() {
-      this.socket.on('send players', players => {
-        console.log('Players on client side ', players);
+    this.socket.on(SEND_PLAYERS, (players) => {
+      this.players = players;
+    });
+  },
+  methods: {
+    joinGame() {
+      const { SERVER, CLIENT } = this.dictionary;
+      const { SEND_PLAYERS } = SERVER;
+      const { JOIN_GAME } = CLIENT;
+
+      this.socket.emit(JOIN_GAME);
+      this.socket.on(SEND_PLAYERS, (players) => {
         this.players = players;
       });
     },
-    methods: {
-      generateString() {
-        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      },
-      generatePlayerName() {
-        this.socket.emit('create player', this.generateString());
-        this.socket.on('send players', players => {
-          console.log('Players on client side ', players);
-          this.players = players;
-        });
-      }
-    }
-  }
+  },
+};
 </script>
 
-<style>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
-
-  .red {
-    color: red;
-  }
-  .green {
-    color: green;
-  }
-  .blue {
-    color: blue;
-  }
-  .orange {
-    color: orange;
-  }
+<style lang="scss">
+@import "App.scss";
 </style>
