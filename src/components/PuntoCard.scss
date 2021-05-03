@@ -1,0 +1,37 @@
+@import "../assets/styles/_colors.scss";
+
+$puntoCardSize: 150px;
+$puntoDotSize: 50px;
+
+.puntoCard {
+  width: $puntoCardSize;
+  height: $puntoCardSize;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: $black_color;
+
+  .puntoCard__row {
+    display: flex;
+    width: $puntoCardSize;
+  }
+
+  .puntoCard__dot {
+    width: $puntoDotSize;
+    height: $puntoDotSize;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.dotWithColor {
+      &::before {
+        content: "";
+        width: 25px;
+        height: 25px;
+        background-color: $red_color;
+        display: block;
+        border-radius: 100%;
+      }
+    }
+  }
+}
