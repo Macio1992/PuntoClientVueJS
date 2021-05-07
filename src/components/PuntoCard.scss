@@ -1,34 +1,55 @@
 @import "../assets/styles/_colors.scss";
 
 $puntoCardSize: 150px;
-$puntoDotSize: 50px;
+$puntoDotSize: 25px;
 
 .puntoCard {
   width: $puntoCardSize;
   height: $puntoCardSize;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   background-color: $black_color;
 
   .puntoCard__row {
     display: flex;
-    width: $puntoCardSize;
   }
 
   .puntoCard__dot {
-    width: $puntoDotSize;
-    height: $puntoDotSize;
+    width: $puntoDotSize * 2;
+    height: $puntoDotSize * 2;
     display: flex;
     justify-content: center;
     align-items: center;
 
-    &.dotWithColor {
+    &.puntoCard__dotWithColor {
+      &.puntoCard__dotWithColor--red {
+        &::before {
+          background-color: $red_color;
+        }
+      }
+
+      &.puntoCard__dotWithColor--green {
+        &::before {
+          background-color: $green_color;
+        }
+      }
+
+      &.puntoCard__dotWithColor--blue {
+        &::before {
+          background-color: $blue_color;
+        }
+      }
+
+      &.puntoCard__dotWithColor--orange {
+        &::before {
+          background-color: $orange_color;
+        }
+      }
+
       &::before {
         content: "";
-        width: 25px;
-        height: 25px;
-        background-color: $red_color;
+        width: $puntoDotSize;
+        height: $puntoDotSize;
         display: block;
         border-radius: 100%;
       }
