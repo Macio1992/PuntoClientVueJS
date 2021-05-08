@@ -13,8 +13,8 @@ jest.mock("socket.io-client", () => {
 
 let mockSocket, endpoint;
 const FAKE_PLAYERS = [
-  { id: "id_1", playerName: "playerName-red", color: "red" },
-  { id: "id_2", playerName: "playerName-blue", color: "blue" },
+  { id: "id_1", color: "red" },
+  { id: "id_2", color: "blue" },
 ];
 
 describe("Game", () => {

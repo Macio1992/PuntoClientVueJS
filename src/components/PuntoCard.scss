@@ -1,25 +1,16 @@
 @import "../assets/styles/_colors.scss";
 
-$puntoCardSize: 150px;
-$puntoDotSize: 25px;
+$puntoCardSize: 90px;
+$puntoDotSize: $puntoCardSize/3;
 
 .puntoCard {
   width: $puntoCardSize;
   height: $puntoCardSize;
-  display: flex;
-  flex-direction: column;
   background-color: $black_color;
 
-  .puntoCard__row {
-    display: flex;
-  }
-
   .puntoCard__dot {
-    width: $puntoDotSize * 2;
-    height: $puntoDotSize * 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: $puntoDotSize;
+    height: $puntoDotSize;
 
     &.puntoCard__dotWithColor {
       &.puntoCard__dotWithColor--red {
@@ -48,8 +39,8 @@ $puntoDotSize: 25px;
 
       &::before {
         content: "";
-        width: $puntoDotSize;
-        height: $puntoDotSize;
+        width: $puntoDotSize/2;
+        height: $puntoDotSize/2;
         display: block;
         border-radius: 100%;
       }
