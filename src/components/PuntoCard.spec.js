@@ -11,39 +11,39 @@ describe("PuntoCard", () => {
   });
 
   it("should render one dot card when 'one' option is passed", async () => {
-    await runTestForAllColors("one");
+    await runTestForAllColors("one_dot_card");
   });
 
   it("should render two dots card when 'two' option is passed", async () => {
-    await runTestForAllColors("two");
+    await runTestForAllColors("two_dot_card");
   });
 
   it("should render three dots card when 'three' option is passed", async () => {
-    await runTestForAllColors("three");
+    await runTestForAllColors("three_dot_card");
   });
 
   it("should render four dots card when 'four' option is passed", async () => {
-    await runTestForAllColors("four");
+    await runTestForAllColors("four_dot_card");
   });
 
   it("should render five dots card when 'five' option is passed", async () => {
-    await runTestForAllColors("five");
+    await runTestForAllColors("five_dot_card");
   });
 
   it("should render six dots card when 'six' option is passed", async () => {
-    await runTestForAllColors("six");
+    await runTestForAllColors("six_dot_card");
   });
 
   it("should render seven dots card when 'seven' option is passed", async () => {
-    await runTestForAllColors("seven");
+    await runTestForAllColors("seven_DOT_CARD");
   });
 
   it("should render eight dots card when 'eight' option is passed", async () => {
-    await runTestForAllColors("eight");
+    await runTestForAllColors("eight_dot_card");
   });
 
   it("should render nine dots card when 'nine' option is passed", async () => {
-    await runTestForAllColors("nine");
+    await runTestForAllColors("nine_dot_card");
   });
 });
 
@@ -65,15 +65,15 @@ async function verifyDigitsWithColor(wrapper, option, color) {
 
 function generateDotsAmount(option) {
   const digitWords = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
+    "one_dot_card",
+    "two_dot_card",
+    "three_dot_card",
+    "four_dot_card",
+    "five_dot_card",
+    "six_dot_card",
+    "seven_dot_card",
+    "eight_dot_card",
+    "nine_dot_card",
   ];
   return digitWords.indexOf(option) + 1;
 }

@@ -12,6 +12,8 @@
 </template>
 <script>
 import cards from "../assets/dictionaries/_cards";
+import colors from "../assets/dictionaries/_colors";
+import boards from '../assets/dictionaries/_boards';
 
 export default {
   name: "PuntoCard",
@@ -21,13 +23,23 @@ export default {
   },
   methods: {
     setClass(dot) {
+      const {
+        RED_COLOR,
+        ORANGE_COLOR,
+        GREEN_COLOR,
+        BLUE_COLOR,
+      } = colors;
+
       return {
         puntoCard__dotWithColor: dot === ".",
-        "puntoCard__dotWithColor--red": this.color === "red" && dot === ".",
-        "puntoCard__dotWithColor--blue": this.color === "blue" && dot === ".",
-        "puntoCard__dotWithColor--green": this.color === "green" && dot === ".",
+        "puntoCard__dotWithColor--red":
+          this.color === RED_COLOR && dot === ".",
+        "puntoCard__dotWithColor--blue":
+          this.color === BLUE_COLOR && dot === ".",
+        "puntoCard__dotWithColor--green":
+          this.color === GREEN_COLOR && dot === ".",
         "puntoCard__dotWithColor--orange":
-          this.color === "orange" && dot === ".",
+          this.color === ORANGE_COLOR && dot === ".",
       };
     },
   },
@@ -42,79 +54,52 @@ export default {
         SIX_DOT_CARD,
         SEVEN_DOT_CARD,
         EIGHT_DOT_CARD,
-        NINE_DOT_CARD
+        NINE_DOT_CARD,
       } = cards;
+
+      const {
+        ONE_DOT_BOARD,
+        TWO_DOT_BOARD,
+        THREE_DOT_BOARD,
+        FOUR_DOT_BOARD,
+        FIVE_DOT_BOARD,
+        SIX_DOT_BOARD,
+        SEVEN_DOT_BOARD,
+        EIGHT_DOT_BOARD,
+        NINE_DOT_BOARD,
+        DEFAULT_BOARD,
+      } = boards;
 
       switch (this.option) {
         case ONE_DOT_CARD: {
-          return [
-            [".", "", ""],
-            ["", "", ""],
-            ["", "", ""],
-          ];
+          return ONE_DOT_BOARD;
         }
         case TWO_DOT_CARD: {
-          return [
-            [".", "", ""],
-            ["", "", ""],
-            ["", "", "."],
-          ];
+          return TWO_DOT_BOARD;
         }
         case THREE_DOT_CARD: {
-          return [
-            ["", "", "."],
-            ["", ".", ""],
-            [".", "", ""],
-          ];
+          return THREE_DOT_BOARD;
         }
         case FOUR_DOT_CARD: {
-          return [
-            [".", "", "."],
-            ["", "", ""],
-            [".", "", "."],
-          ];
+          return FOUR_DOT_BOARD;
         }
         case FIVE_DOT_CARD: {
-          return [
-            [".", "", "."],
-            ["", ".", ""],
-            [".", "", "."],
-          ];
+          return FIVE_DOT_BOARD;
         }
         case SIX_DOT_CARD: {
-          return [
-            [".", ".", "."],
-            ["", "", ""],
-            [".", ".", "."],
-          ];
+          return SIX_DOT_BOARD;
         }
         case SEVEN_DOT_CARD: {
-          return [
-            [".", ".", "."],
-            ["", ".", ""],
-            [".", ".", "."],
-          ];
+          return SEVEN_DOT_BOARD;
         }
         case EIGHT_DOT_CARD: {
-          return [
-            [".", ".", "."],
-            [".", "", "."],
-            [".", ".", "."],
-          ];
+          return EIGHT_DOT_BOARD;
         }
         case NINE_DOT_CARD: {
-          return [
-            [".", ".", "."],
-            [".", ".", "."],
-            [".", ".", "."],
-          ];
+          return NINE_DOT_BOARD;
         }
         default: {
-          return [
-            ["", "", ""],
-            ["", "", ""],
-            ["", "", ""],
-          ];
+          return DEFAULT_BOARD;
         }
       }
     },

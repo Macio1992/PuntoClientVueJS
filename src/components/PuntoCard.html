@@ -1,0 +1,10 @@
+<div class="puntoCard d-flex flex-column">
+  <div v-for="dotRow in dots" :key="dotRow" class="puntoCard__row d-flex">
+    <div
+      v-for="dot in dotRow"
+      :key="dot"
+      class="puntoCard__dot d-flex justify-content-center align-items-center"
+      :class="setClass(dot)"
+    ></div>
+  </div>
+</div>

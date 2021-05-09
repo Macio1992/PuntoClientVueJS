@@ -1,7 +1,5 @@
 @import "../assets/styles/_colors.scss";
-
-$puntoCardSize: 90px;
-$puntoDotSize: $puntoCardSize/3;
+@import "../assets/styles/_sizes.scss";
 
 .puntoCard {
   width: $puntoCardSize;

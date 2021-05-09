@@ -1,4 +1,5 @@
-$board_cell_size: 100px;
+@import "../assets/styles/_colors.scss";
+@import "../assets/styles/sizes.scss";
 
 .board {
   width: $board_cell_size*6;
@@ -15,8 +16,7 @@ $board_cell_size: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
-      border: 3px dotted gray;
-      margin: 5px;
+      border: 3px dotted $gray_color;
     }
   }
 }

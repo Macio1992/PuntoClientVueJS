@@ -6,14 +6,13 @@
       :key="boardRow"
     >
       <div
-        class="board__cell"
+        class="board__cell m-1"
         v-for="(boardCell, j) in boardRow"
         :key="boardCell"
         @click="setCell(i, j)"
-        :class="[`${boardCell}`]"
       >
         <template v-if="board[i][j] !== ''">
-          <PuntoCard :option="option" :color="color" />
+          <PuntoCard :option="board[i][j]" :color="color" />
         </template>
       </div>
     </div>
