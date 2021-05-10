@@ -76,7 +76,7 @@ describe("Game", () => {
     expect(wrapper.vm.player.playerColor).toBe("red");
   });
 
-  test.skip("should hide join button when user has joined the game", async () => {
+  test("should hide join button when user has joined the game", async () => {
     const wrapper = mount(Game);
 
     expect(wrapper.findAll(".joinButton").length).toBe(1);
