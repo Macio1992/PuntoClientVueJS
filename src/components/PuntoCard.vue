@@ -1,103 +1,105 @@
 <template>
-  <div class="puntoCard">
-    <div v-for="dotRow in dots" v-bind:key="dotRow" class="puntoCard__row">
+  <div class="puntoCard d-flex flex-column">
+    <div v-for="dotRow in dots" :key="dotRow" class="puntoCard__row d-flex">
       <div
         v-for="dot in dotRow"
-        v-bind:key="dot"
-        class="puntoCard__dot"
-        :class="[
-          {
-            puntoCard__dotWithColor: dot === '.',
-            'puntoCard__dotWithColor--red': color === 'red' && dot === '.',
-            'puntoCard__dotWithColor--blue': color === 'blue' && dot === '.',
-            'puntoCard__dotWithColor--green': color === 'green' && dot === '.',
-            'puntoCard__dotWithColor--orange':
-              color === 'orange' && dot === '.',
-          },
-        ]"
+        :key="dot"
+        class="puntoCard__dot d-flex justify-content-center align-items-center"
+        :class="setClass(dot)"
       ></div>
     </div>
   </div>
 </template>
 <script>
+import cards from "../assets/dictionaries/_cards";
+import colors from "../assets/dictionaries/_colors";
+import boards from '../assets/dictionaries/_boards';
+
 export default {
   name: "PuntoCard",
   props: {
     option: String,
     color: String,
   },
+  methods: {
+    setClass(dot) {
+      const {
+        RED_COLOR,
+        ORANGE_COLOR,
+        GREEN_COLOR,
+        BLUE_COLOR,
+      } = colors;
+
+      return {
+        puntoCard__dotWithColor: dot === ".",
+        "puntoCard__dotWithColor--red":
+          this.color === RED_COLOR && dot === ".",
+        "puntoCard__dotWithColor--blue":
+          this.color === BLUE_COLOR && dot === ".",
+        "puntoCard__dotWithColor--green":
+          this.color === GREEN_COLOR && dot === ".",
+        "puntoCard__dotWithColor--orange":
+          this.color === ORANGE_COLOR && dot === ".",
+      };
+    },
+  },
   computed: {
     dots() {
+      const {
+        ONE_DOT_CARD,
+        TWO_DOT_CARD,
+        THREE_DOT_CARD,
+        FOUR_DOT_CARD,
+        FIVE_DOT_CARD,
+        SIX_DOT_CARD,
+        SEVEN_DOT_CARD,
+        EIGHT_DOT_CARD,
+        NINE_DOT_CARD,
+      } = cards;
+
+      const {
+        ONE_DOT_BOARD,
+        TWO_DOT_BOARD,
+        THREE_DOT_BOARD,
+        FOUR_DOT_BOARD,
+        FIVE_DOT_BOARD,
+        SIX_DOT_BOARD,
+        SEVEN_DOT_BOARD,
+        EIGHT_DOT_BOARD,
+        NINE_DOT_BOARD,
+        DEFAULT_BOARD,
+      } = boards;
+
       switch (this.option) {
-        case "one": {
-          return [
-            [".", "", ""],
-            ["", "", ""],
-            ["", "", ""],
-          ];
+        case ONE_DOT_CARD: {
+          return ONE_DOT_BOARD;
         }
-        case "two": {
-          return [
-            [".", "", ""],
-            ["", "", ""],
-            ["", "", "."],
-          ];
+        case TWO_DOT_CARD: {
+          return TWO_DOT_BOARD;
         }
-        case "three": {
-          return [
-            ["", "", "."],
-            ["", ".", ""],
-            [".", "", ""],
-          ];
+        case THREE_DOT_CARD: {
+          return THREE_DOT_BOARD;
         }
-        case "four": {
-          return [
-            [".", "", "."],
-            ["", "", ""],
-            [".", "", "."],
-          ];
+        case FOUR_DOT_CARD: {
+          return FOUR_DOT_BOARD;
         }
-        case "five": {
-          return [
-            [".", "", "."],
-            ["", ".", ""],
-            [".", "", "."],
-          ];
+        case FIVE_DOT_CARD: {
+          return FIVE_DOT_BOARD;
         }
-        case "six": {
-          return [
-            [".", ".", "."],
-            ["", "", ""],
-            [".", ".", "."],
-          ];
+        case SIX_DOT_CARD: {
+          return SIX_DOT_BOARD;
         }
-        case "seven": {
-          return [
-            [".", ".", "."],
-            ["", ".", ""],
-            [".", ".", "."],
-          ];
+        case SEVEN_DOT_CARD: {
+          return SEVEN_DOT_BOARD;
         }
-        case "eight": {
-          return [
-            [".", ".", "."],
-            [".", "", "."],
-            [".", ".", "."],
-          ];
+        case EIGHT_DOT_CARD: {
+          return EIGHT_DOT_BOARD;
         }
-        case "nine": {
-          return [
-            [".", ".", "."],
-            [".", ".", "."],
-            [".", ".", "."],
-          ];
+        case NINE_DOT_CARD: {
+          return NINE_DOT_BOARD;
         }
         default: {
-          return [
-            ["", "", ""],
-            ["", "", ""],
-            ["", "", ""],
-          ];
+          return DEFAULT_BOARD;
         }
       }
     },

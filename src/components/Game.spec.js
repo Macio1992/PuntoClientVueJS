@@ -13,8 +13,8 @@ jest.mock("socket.io-client", () => {
 
 let mockSocket, endpoint;
 const FAKE_PLAYERS = [
-  { id: "id_1", playerName: "playerName-red", color: "red" },
-  { id: "id_2", playerName: "playerName-blue", color: "blue" },
+  { id: "id_1", color: "red" },
+  { id: "id_2", color: "blue" },
 ];
 
 describe("Game", () => {
@@ -49,9 +49,10 @@ describe("Game", () => {
     await wrapper.find(".joinButton").trigger("click");
     expect(mockSocket.emit).toHaveBeenCalledWith("JoinGame");
     expect(mockSocket.emit).toHaveBeenCalledTimes(1);
-    expect(mockSocket.on).toHaveBeenCalledTimes(2);
+    expect(mockSocket.on).toHaveBeenCalledTimes(3);
     expect(mockSocket.on.mock.calls[0][0]).toEqual("SendPlayers");
     expect(mockSocket.on.mock.calls[1][0]).toEqual("SendPlayers");
+    expect(mockSocket.on.mock.calls[2][0]).toEqual("SendPlayerColor");
 
     mockSocket.on.mock.calls[0][1]([]);
     await wrapper.vm.$nextTick();
@@ -69,6 +70,10 @@ describe("Game", () => {
     expect(wrapper.findAll(".player")[1].attributes().class).toContain(
       FAKE_PLAYERS[1].color
     );
+    expect(wrapper.vm.player.playerJoined).toBe(true);
+
+    mockSocket.on.mock.calls[2][1]("red");
+    expect(wrapper.vm.player.playerColor).toBe("red");
   });
 
   test("should hide join button when user has joined the game", async () => {

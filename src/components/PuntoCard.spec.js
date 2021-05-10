@@ -10,40 +10,40 @@ describe("PuntoCard", () => {
     wrapper = mount(PuntoCard);
   });
 
-  it("should render one dot card when 'one' option is passed", async () => {
-    await runTestForAllColors("one");
+  test("should render one dot card when 'one' option is passed", async () => {
+    await runTestForAllColors("one_dot_card");
   });
 
-  it("should render two dots card when 'two' option is passed", async () => {
-    await runTestForAllColors("two");
+  test("should render two dots card when 'two' option is passed", async () => {
+    await runTestForAllColors("two_dot_card");
   });
 
-  it("should render three dots card when 'three' option is passed", async () => {
-    await runTestForAllColors("three");
+  test("should render three dots card when 'three' option is passed", async () => {
+    await runTestForAllColors("three_dot_card");
   });
 
-  it("should render four dots card when 'four' option is passed", async () => {
-    await runTestForAllColors("four");
+  test("should render four dots card when 'four' option is passed", async () => {
+    await runTestForAllColors("four_dot_card");
   });
 
-  it("should render five dots card when 'five' option is passed", async () => {
-    await runTestForAllColors("five");
+  test("should render five dots card when 'five' option is passed", async () => {
+    await runTestForAllColors("five_dot_card");
   });
 
-  it("should render six dots card when 'six' option is passed", async () => {
-    await runTestForAllColors("six");
+  test("should render six dots card when 'six' option is passed", async () => {
+    await runTestForAllColors("six_dot_card");
   });
 
-  it("should render seven dots card when 'seven' option is passed", async () => {
-    await runTestForAllColors("seven");
+  test("should render seven dots card when 'seven' option is passed", async () => {
+    await runTestForAllColors("seven_DOT_CARD");
   });
 
-  it("should render eight dots card when 'eight' option is passed", async () => {
-    await runTestForAllColors("eight");
+  test("should render eight dots card when 'eight' option is passed", async () => {
+    await runTestForAllColors("eight_dot_card");
   });
 
-  it("should render nine dots card when 'nine' option is passed", async () => {
-    await runTestForAllColors("nine");
+  test("should render nine dots card when 'nine' option is passed", async () => {
+    await runTestForAllColors("nine_dot_card");
   });
 });
 
@@ -65,15 +65,15 @@ async function verifyDigitsWithColor(wrapper, option, color) {
 
 function generateDotsAmount(option) {
   const digitWords = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
+    "one_dot_card",
+    "two_dot_card",
+    "three_dot_card",
+    "four_dot_card",
+    "five_dot_card",
+    "six_dot_card",
+    "seven_dot_card",
+    "eight_dot_card",
+    "nine_dot_card",
   ];
   return digitWords.indexOf(option) + 1;
 }

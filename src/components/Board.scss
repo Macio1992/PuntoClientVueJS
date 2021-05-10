@@ -1,0 +1,22 @@
+@import "../assets/styles/_colors.scss";
+@import "../assets/styles/sizes.scss";
+
+.board {
+  width: $board_cell_size*6;
+  height: $board_cell_size*6;
+
+  .board__row {
+    width: $board_cell_size*6;
+    height: $board_cell_size;
+    margin: 5px 0;
+
+    .board__cell {
+      width: $board_cell_size;
+      height: $board_cell_size;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 3px dotted $gray_color;
+    }
+  }
+}
