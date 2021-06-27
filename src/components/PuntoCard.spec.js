@@ -1,4 +1,4 @@
-/* global describe, it, expect, beforeEach */
+/* global describe, test, expect, beforeEach */
 
 import { mount } from "@vue/test-utils";
 import PuntoCard from "./PuntoCard.vue";

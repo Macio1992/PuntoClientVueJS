@@ -9,7 +9,11 @@
         >
           Join Game
         </button>
-        <Board :option="generatedCard" :color="player.playerColor" />
+        <Board
+          :option="generatedCard"
+          :color="player.playerColor"
+          :socket="socket"
+        />
       </div>
       <div class="col-4 playerArea">
         <div class="players" v-if="players.length > 0">

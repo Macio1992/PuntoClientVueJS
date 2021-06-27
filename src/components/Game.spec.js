@@ -29,10 +29,10 @@ describe("Game", () => {
     const wrapper = mount(Game);
     expect(wrapper.html()).toBeTruthy();
 
-    expect(mockSocket.on).toHaveBeenCalledTimes(1);
-    expect(mockSocket.on.mock.calls[0][0]).toEqual("SendPlayers");
+    expect(mockSocket.on).toHaveBeenCalledTimes(2);
+    expect(mockSocket.on.mock.calls[1][0]).toEqual("SendPlayers");
 
-    mockSocket.on.mock.calls[0][1]([FAKE_PLAYERS[0]]);
+    mockSocket.on.mock.calls[1][1]([FAKE_PLAYERS[0]]);
 
     await wrapper.vm.$nextTick();
 
@@ -49,16 +49,16 @@ describe("Game", () => {
     await wrapper.find(".joinButton").trigger("click");
     expect(mockSocket.emit).toHaveBeenCalledWith("JoinGame");
     expect(mockSocket.emit).toHaveBeenCalledTimes(1);
-    expect(mockSocket.on).toHaveBeenCalledTimes(3);
-    expect(mockSocket.on.mock.calls[0][0]).toEqual("SendPlayers");
+    expect(mockSocket.on).toHaveBeenCalledTimes(4);
     expect(mockSocket.on.mock.calls[1][0]).toEqual("SendPlayers");
-    expect(mockSocket.on.mock.calls[2][0]).toEqual("SendPlayerColor");
+    expect(mockSocket.on.mock.calls[2][0]).toEqual("SendPlayers");
+    expect(mockSocket.on.mock.calls[3][0]).toEqual("SendPlayerColor");
 
-    mockSocket.on.mock.calls[0][1]([]);
+    mockSocket.on.mock.calls[1][1]([]);
     await wrapper.vm.$nextTick();
     expect(wrapper.findAll(".player").length).toBe(0);
 
-    mockSocket.on.mock.calls[1][1]([FAKE_PLAYERS[0], FAKE_PLAYERS[1]]);
+    mockSocket.on.mock.calls[2][1]([FAKE_PLAYERS[0], FAKE_PLAYERS[1]]);
 
     await wrapper.vm.$nextTick();
 
@@ -72,7 +72,7 @@ describe("Game", () => {
     );
     expect(wrapper.vm.player.playerJoined).toBe(true);
 
-    mockSocket.on.mock.calls[2][1]("red");
+    mockSocket.on.mock.calls[3][1]("red");
     expect(wrapper.vm.player.playerColor).toBe("red");
   });
 
@@ -82,7 +82,7 @@ describe("Game", () => {
     expect(wrapper.findAll(".joinButton").length).toBe(1);
 
     await wrapper.find(".joinButton").trigger("click");
-    mockSocket.on.mock.calls[1][1]([FAKE_PLAYERS[0], FAKE_PLAYERS[1]]);
+    mockSocket.on.mock.calls[2][1]([FAKE_PLAYERS[0], FAKE_PLAYERS[1]]);
 
     await wrapper.vm.$nextTick();
 
