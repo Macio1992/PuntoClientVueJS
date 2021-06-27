@@ -11,8 +11,8 @@
         :key="boardCell"
         @click="setCell(i, j)"
       >
-        <template v-if="board[i][j] !== ''">
-          <PuntoCard :option="board[i][j]" :color="color" />
+        <template v-if="board[i][j]">
+          <PuntoCard :option="board[i][j].option" :color="board[i][j].color" />
         </template>
       </div>
     </div>
@@ -21,6 +21,7 @@
 
 <script>
 import PuntoCard from "./PuntoCard";
+import dictionary from "../assets/dictionaries/_socketActionsDictionary";
 
 export default {
   name: "Board",
@@ -30,21 +31,41 @@ export default {
   props: {
     option: String,
     color: String,
+    socket: Object,
+  },
+  mounted() {
+    const { SERVER } = dictionary;
+    const { SEND_BOARD_SERVER } = SERVER;
+
+    this.socket.on(SEND_BOARD_SERVER, (board) => {
+      this.board = board;
+    });
   },
   methods: {
     setCell(i, j) {
-      this.board[i][j] = this.option;
+      const { SERVER, CLIENT } = dictionary;
+      const { SEND_BOARD_SERVER } = SERVER;
+      const { SEND_BOARD_CLIENT } = CLIENT;
+
+      this.board[i][j] = {
+        color: this.color,
+        option: this.option,
+      };
+      this.socket.emit(SEND_BOARD_CLIENT, this.board);
+      this.socket.on(SEND_BOARD_SERVER, (board) => {
+        this.board = board;
+      });
     },
   },
   data() {
     return {
       board: [
-        ["", "", "", "", "", ""],
-        ["", "", "", "", "", ""],
-        ["", "", "", "", "", ""],
-        ["", "", "", "", "", ""],
-        ["", "", "", "", "", ""],
-        ["", "", "", "", "", ""],
+        [null, null, null, null, null, null],
+        [null, null, null, null, null, null],
+        [null, null, null, null, null, null],
+        [null, null, null, null, null, null],
+        [null, null, null, null, null, null],
+        [null, null, null, null, null, null],
       ],
     };
   },
