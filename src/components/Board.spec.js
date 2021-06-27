@@ -32,7 +32,7 @@ const SAMPLE_BOARD = [
   [null, null, { color: "green", option: "five_dot_card" }, null, null, null],
 ];
 
-describe.only("Board", () => {
+describe("Board", () => {
   beforeEach(() => {
     endpoint = "localhost:3000";
     mockSocket = io(endpoint);

@@ -5,7 +5,7 @@ import PuntoCard from "./PuntoCard.vue";
 
 let wrapper;
 
-describe.skip("PuntoCard", () => {
+describe("PuntoCard", () => {
   beforeEach(() => {
     wrapper = mount(PuntoCard);
   });
