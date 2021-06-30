@@ -13,18 +13,25 @@
           :option="generatedCard"
           :color="player.playerColor"
           :socket="socket"
+          @setActivePlayer="setActivePlayer($event)"
         />
       </div>
       <div class="col-4 playerArea">
-        <div class="players" v-if="players.length > 0">
-          <ul class="playersList row">
-            <li
-              v-for="player in players"
-              :key="player.id"
-              :class="[`player player--${player.color} col-6`]"
-            ></li>
-          </ul>
-        </div>
+        <ul class="players d-flex" v-if="players.length > 0">
+          <li
+            v-for="player in players"
+            :key="player.id"
+            :class="[
+              `player player--${player.color} ${
+                player.color === activePlayer ? 'active' : ''
+              } mt-2`,
+            ]"
+          ></li>
+        </ul>
+        <p
+          v-if="player.playerColor"
+          :class="[`player player--${player.playerColor} mt-5`]"
+        ></p>
         <button @click="generateCard()" class="my-2">Generate card</button>
         <PuntoCard
           v-if="generatedCard"
@@ -59,6 +66,7 @@ export default {
         playerColor: "",
       },
       generatedCard: "",
+      activePlayer: "",
     };
   },
   created() {
@@ -94,6 +102,10 @@ export default {
       this.socket.on(SEND_PLAYER_COLOR, (color) => {
         this.player.playerColor = color;
       });
+    },
+    setActivePlayer(activePlayer) {
+      console.log("ACTIVE PLAYER IN PARENT ", activePlayer);
+      this.activePlayer = activePlayer;
     },
   },
 };

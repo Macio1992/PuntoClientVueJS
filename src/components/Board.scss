@@ -2,11 +2,11 @@
 @import "../assets/styles/sizes.scss";
 
 .board {
-  width: $board_cell_size*6;
-  height: $board_cell_size*6;
+  width: $board_cell_size * 6;
+  height: $board_cell_size * 6;
 
   .board__row {
-    width: $board_cell_size*6;
+    width: $board_cell_size * 6;
     height: $board_cell_size;
     margin: 5px 0;
 
@@ -17,6 +17,11 @@
       justify-content: center;
       align-items: center;
       border: 3px dotted $gray_color;
+      cursor: pointer;
     }
+  }
+
+  &.board--blocked {
+    pointer-events: none;
   }
 }
