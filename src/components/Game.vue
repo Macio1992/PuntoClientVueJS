@@ -10,14 +10,14 @@
           Join Game
         </button>
         <Board
-          :option="generatedCard"
+          :card="generatedCard"
           :color="player.playerColor"
           :socket="socket"
           @setActivePlayer="setActivePlayer($event)"
         />
       </div>
       <div class="col-4 playerArea">
-        <ul class="players d-flex" v-if="players.length > 0">
+        <ul class="players d-flex m-0 p-0" v-if="players.length > 0">
           <li
             v-for="player in players"
             :key="player.id"
@@ -35,7 +35,7 @@
         <button @click="generateCard()" class="my-2">Generate card</button>
         <PuntoCard
           v-if="generatedCard"
-          :option="generatedCard"
+          :card="generatedCard"
           :color="player.playerColor"
         />
       </div>
@@ -104,7 +104,6 @@ export default {
       });
     },
     setActivePlayer(activePlayer) {
-      console.log("ACTIVE PLAYER IN PARENT ", activePlayer);
       this.activePlayer = activePlayer;
     },
   },

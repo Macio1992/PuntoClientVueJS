@@ -13,27 +13,21 @@
 <script>
 import cards from "../assets/dictionaries/_cards";
 import colors from "../assets/dictionaries/_colors";
-import boards from '../assets/dictionaries/_boards';
+import boards from "../assets/dictionaries/_boards";
 
 export default {
   name: "PuntoCard",
   props: {
-    option: String,
+    card: String,
     color: String,
   },
   methods: {
     setClass(dot) {
-      const {
-        RED_COLOR,
-        ORANGE_COLOR,
-        GREEN_COLOR,
-        BLUE_COLOR,
-      } = colors;
+      const { RED_COLOR, ORANGE_COLOR, GREEN_COLOR, BLUE_COLOR } = colors;
 
       return {
         puntoCard__dotWithColor: dot === ".",
-        "puntoCard__dotWithColor--red":
-          this.color === RED_COLOR && dot === ".",
+        "puntoCard__dotWithColor--red": this.color === RED_COLOR && dot === ".",
         "puntoCard__dotWithColor--blue":
           this.color === BLUE_COLOR && dot === ".",
         "puntoCard__dotWithColor--green":
@@ -70,7 +64,7 @@ export default {
         DEFAULT_BOARD,
       } = boards;
 
-      switch (this.option) {
+      switch (this.card) {
         case ONE_DOT_CARD: {
           return ONE_DOT_BOARD;
         }

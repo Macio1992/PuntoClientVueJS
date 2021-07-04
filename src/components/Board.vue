@@ -18,7 +18,7 @@
         @click="setCell(i, j)"
       >
         <template v-if="board[i][j]">
-          <PuntoCard :option="board[i][j].option" :color="board[i][j].color" />
+          <PuntoCard :card="board[i][j].card" :color="board[i][j].color" />
         </template>
       </div>
     </div>
@@ -35,7 +35,7 @@ export default {
     PuntoCard,
   },
   props: {
-    option: String,
+    card: String,
     color: String,
     socket: Object,
   },
@@ -64,13 +64,13 @@ export default {
 
       this.board[i][j] = {
         color: this.color,
-        option: this.option,
+        card: this.card,
       };
       this.socket.emit(SEND_BOARD_CLIENT, this.board);
       this.socket.on(SEND_BOARD_SERVER, (board) => {
         this.board = board;
       });
-      const cardIndex = this.cards.indexOf(this.option);
+      const cardIndex = this.cards.indexOf(this.card);
       this.cards.splice(cardIndex, 1);
       this.socket.emit(SEND_CARDS_CLIENT, {
         color: this.color,

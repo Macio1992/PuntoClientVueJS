@@ -25,11 +25,11 @@ const EMPTY_BOARD = [
 
 const SAMPLE_BOARD = [
   [null, null, null, null, null, null],
-  [null, { color: "red", option: "one_dot_card" }, null, null, null, null],
+  [null, { color: "red", card: "one_dot_card" }, null, null, null, null],
   [null, null, null, null, null, null],
   [null, null, null, null, null, null],
   [null, null, null, null, null, null],
-  [null, null, { color: "green", option: "five_dot_card" }, null, null, null],
+  [null, null, { color: "green", card: "five_dot_card" }, null, null, null],
 ];
 
 describe("Board", () => {
@@ -47,12 +47,23 @@ describe("Board", () => {
       },
     });
 
-    expect(mockSocket.on).toHaveBeenCalledTimes(1);
+    expect(mockSocket.on).toHaveBeenCalledTimes(2);
     expect(mockSocket.on.mock.calls[0][0]).toEqual("SendBoardFromServer");
+    expect(mockSocket.on.mock.calls[1][0]).toEqual("SendActivePlayer");
 
     mockSocket.on.mock.calls[0][1](EMPTY_BOARD);
+    mockSocket.on.mock.calls[1][1]("red");
 
     await wrapper.vm.$nextTick();
+
+    expect(wrapper.emitted().setActivePlayer).toBeTruthy();
+    expect(wrapper.vm.activePlayer).toBe("red");
+    expect(
+      wrapper
+        .find(".board")
+        .classes()
+        .indexOf("board--blocked")
+    ).not.toBe(-1);
 
     expect(wrapper.vm.board).toEqual(EMPTY_BOARD);
     expect(wrapper.findAll(".board__row").length).toBe(6);
@@ -67,7 +78,7 @@ describe("Board", () => {
       },
     });
 
-    expect(mockSocket.on).toHaveBeenCalledTimes(1);
+    expect(mockSocket.on).toHaveBeenCalledTimes(2);
     expect(mockSocket.on.mock.calls[0][0]).toEqual("SendBoardFromServer");
 
     mockSocket.on.mock.calls[0][1](SAMPLE_BOARD);
@@ -83,27 +94,56 @@ describe("Board", () => {
   test("should show punto card when board cell has been clicked", async () => {
     const wrapper = mount(Board, {
       props: {
-        option: "three_dot_card",
+        card: "three_dot_card",
         color: "red",
         socket: mockSocket,
       },
     });
 
     expect(mockSocket.on.mock.calls[0][0]).toEqual("SendBoardFromServer");
-
     mockSocket.on.mock.calls[0][1](EMPTY_BOARD);
 
     await wrapper.findAll(".board__cell")[0].trigger("click");
     await wrapper.vm.$nextTick();
 
-    expect(mockSocket.on).toHaveBeenCalledTimes(2);
-    expect(mockSocket.on.mock.calls[1][0]).toEqual("SendBoardFromServer");
+    expect(mockSocket.on).toHaveBeenCalledTimes(3);
+
+    expect(mockSocket.emit).toHaveBeenCalledTimes(3);
     expect(mockSocket.emit.mock.calls[0][0]).toEqual("SendBoardFromClient");
+    expect(mockSocket.emit.mock.calls[1][0]).toEqual("SendCardsFromClient");
+    expect(mockSocket.emit.mock.calls[2][0]).toEqual("SendNextPlayer");
+
+    expect(mockSocket.emit.mock.calls[0][1]).toEqual(EMPTY_BOARD);
+    expect(mockSocket.emit.mock.calls[1][1]).toEqual({
+      color: "red",
+      cards: [
+        "one_dot_card",
+        "one_dot_card",
+        "two_dot_card",
+        "two_dot_card",
+        "three_dot_card",
+        "four_dot_card",
+        "four_dot_card",
+        "five_dot_card",
+        "five_dot_card",
+        "six_dot_card",
+        "six_dot_card",
+        "seven_dot_card",
+        "seven_dot_card",
+        "eight_dot_card",
+        "eight_dot_card",
+        "nine_dot_card",
+        "nine_dot_card",
+      ],
+    });
+    expect(mockSocket.emit.mock.calls[2][1]).toEqual(undefined);
+
+    expect(wrapper.vm.cards.length).toBe(17);
 
     expect(wrapper.findAllComponents(PuntoCard).length).toBe(1);
     expect(wrapper.vm.board[0][0]).toEqual({
       color: "red",
-      option: "three_dot_card",
+      card: "three_dot_card",
     });
     expect(wrapper.findAll(".board__cell")[0].html()).toContain("puntoCard");
   });
