@@ -1,5 +1,5 @@
 /* global test, expect, describe, jest, beforeEach, afterEach */
-import { mount } from "@vue/test-utils";
+import { mount, config } from "@vue/test-utils";
 import Board from "./Board.vue";
 import PuntoCard from "./PuntoCard.vue";
 import io from "socket.io-client";
@@ -36,16 +36,13 @@ describe("Board", () => {
   beforeEach(() => {
     endpoint = "localhost:3000";
     mockSocket = io(endpoint);
+    config.global.mocks["$socketio"] = mockSocket;
   });
 
   afterEach(() => jest.clearAllMocks());
 
   test("should render empty board when receiving empty board from socket server", async () => {
-    const wrapper = mount(Board, {
-      props: {
-        socket: mockSocket,
-      },
-    });
+    const wrapper = mount(Board);
 
     expect(mockSocket.on).toHaveBeenCalledTimes(2);
     expect(mockSocket.on.mock.calls[0][0]).toEqual("SendBoardFromServer");
@@ -72,11 +69,7 @@ describe("Board", () => {
   });
 
   test("should render board with two cards when receiving a board from socket server", async () => {
-    const wrapper = mount(Board, {
-      props: {
-        socket: mockSocket,
-      },
-    });
+    const wrapper = mount(Board,);
 
     expect(mockSocket.on).toHaveBeenCalledTimes(2);
     expect(mockSocket.on.mock.calls[0][0]).toEqual("SendBoardFromServer");
@@ -96,7 +89,6 @@ describe("Board", () => {
       props: {
         card: "three_dot_card",
         color: "red",
-        socket: mockSocket,
       },
     });
 
@@ -146,5 +138,45 @@ describe("Board", () => {
       card: "three_dot_card",
     });
     expect(wrapper.findAll(".board__cell")[0].html()).toContain("puntoCard");
+  });
+
+  test("should cover already put card with another one only if existing one is lover than new one", async () => {
+    const wrapper = mount(Board, {
+      props: {
+        card: "three_dot_card",
+        color: "red",
+      },
+    });
+    expect(mockSocket.on).toHaveBeenCalledTimes(2);
+
+    await wrapper.findAll(".board__cell")[0].trigger("click");
+
+    expect(mockSocket.on).toHaveBeenCalledTimes(3);
+
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.vm.board[0][0]).toEqual(
+      { color: 'red', card: 'three_dot_card' }
+    );
+
+    await wrapper.setProps({ card: "four_dot_card" });
+    await wrapper.findAll(".board__cell")[0].trigger("click");
+
+    expect(mockSocket.on).toHaveBeenCalledTimes(4);
+
+    expect(wrapper.vm.board[0][0]).toEqual(
+      { color: 'red', card: 'four_dot_card' }
+    );
+
+    await wrapper.setProps({ card: "two_dot_card" });
+    await wrapper.findAll(".board__cell")[0].trigger("click");
+
+    // it's not 5 because new chosen card is not greater than current one
+    // current one is 4 (four_dot_card), the new one is 2 (two_dot_card)
+    expect(mockSocket.on).toHaveBeenCalledTimes(4);
+
+    expect(wrapper.vm.board[0][0]).toEqual(
+      { color: 'red', card: 'four_dot_card' }
+    );
   });
 });

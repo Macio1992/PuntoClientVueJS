@@ -28,6 +28,7 @@
 <script>
 import PuntoCard from "./PuntoCard";
 import dictionary from "../assets/dictionaries/_socketActionsDictionary";
+import MAPPED_NUMBERS from "../assets/dictionaries/_mappedCardNumber";
 
 export default {
   name: "Board",
@@ -37,23 +38,31 @@ export default {
   props: {
     card: String,
     color: String,
-    socket: Object,
   },
   mounted() {
     const { SERVER } = dictionary;
     const { SEND_BOARD_SERVER, SEND_ACTIVE_PLAYER_SERVER } = SERVER;
 
-    this.socket.on(SEND_BOARD_SERVER, (board) => {
+    this.$socketio.on(SEND_BOARD_SERVER, (board) => {
       this.board = board;
     });
 
-    this.socket.on(SEND_ACTIVE_PLAYER_SERVER, (activePlayer) => {
+    this.$socketio.on(SEND_ACTIVE_PLAYER_SERVER, (activePlayer) => {
       this.activePlayer = activePlayer;
       this.$emit("setActivePlayer", this.activePlayer);
     });
   },
   methods: {
     setCell(i, j) {
+      if (this.board[i][j]) {
+        const { card } = this.board[i][j];
+        const [number] = card.split("_");
+        const [cardNumber] = this.card.split("_");
+
+        if (MAPPED_NUMBERS[cardNumber] <= MAPPED_NUMBERS[number]) {
+          return;
+        }
+      }
       const { SERVER, CLIENT } = dictionary;
       const { SEND_BOARD_SERVER } = SERVER;
       const {
@@ -66,18 +75,18 @@ export default {
         color: this.color,
         card: this.card,
       };
-      this.socket.emit(SEND_BOARD_CLIENT, this.board);
-      this.socket.on(SEND_BOARD_SERVER, (board) => {
+      this.$socketio.emit(SEND_BOARD_CLIENT, this.board);
+      this.$socketio.on(SEND_BOARD_SERVER, (board) => {
         this.board = board;
       });
       const cardIndex = this.cards.indexOf(this.card);
       this.cards.splice(cardIndex, 1);
-      this.socket.emit(SEND_CARDS_CLIENT, {
+      this.$socketio.emit(SEND_CARDS_CLIENT, {
         color: this.color,
         cards: this.cards,
       });
 
-      this.socket.emit(SEND_NEXT_PLAYER_CLIENT);
+      this.$socketio.emit(SEND_NEXT_PLAYER_CLIENT);
     },
   },
   data() {

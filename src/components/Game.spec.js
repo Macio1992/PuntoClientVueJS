@@ -1,5 +1,5 @@
 /* global test, expect, jest, afterEach, beforeEach, describe */
-import { mount } from "@vue/test-utils";
+import { mount, config } from "@vue/test-utils";
 import Game from "./Game.vue";
 import io from "socket.io-client";
 
@@ -21,49 +21,63 @@ describe("Game", () => {
   beforeEach(() => {
     endpoint = "localhost:3000";
     mockSocket = io(endpoint);
+    config.global.mocks["$socketio"] = mockSocket;
+    config.global.mocks["$testMode"] = true;
   });
 
   afterEach(() => jest.clearAllMocks());
 
-  test("should render App and connect to socket io client and retrieve players on start", async () => {
+  test("should render Game component, connect to socket io client and retrieve no players on start", async () => {
     const wrapper = mount(Game);
     expect(wrapper.html()).toBeTruthy();
 
-    expect(mockSocket.on).toHaveBeenCalledTimes(3);
-    expect(mockSocket.on.mock.calls[2][0]).toEqual("SendPlayers");
+    expect(mockSocket.on).toHaveBeenCalledTimes(1);
+    expect(mockSocket.on.mock.calls[0][0]).toEqual("SendPlayers");
 
-    mockSocket.on.mock.calls[2][1]([FAKE_PLAYERS[0]]);
+    mockSocket.on.mock.calls[0][1]([]);
+    expect(wrapper.vm.players).toEqual([]);
 
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.vm.players).toEqual([FAKE_PLAYERS[0]]);
-    expect(wrapper.findAll(".player").length).toBe(1);
-    expect(wrapper.findAll(".player")[0].attributes().class).toContain(
-      FAKE_PLAYERS[0].color
-    );
+    expect(wrapper.find(".joinButton")).toBeTruthy();
+    expect(wrapper.findAll(".player").length).toBe(0);
   });
 
-  test.skip("should emit joining to the game and retrieve joined players on button click", async () => {
+  test("should render Game component, connect to socket io client and retrieve some players on start", async () => {
     const wrapper = mount(Game);
+    expect(wrapper.html()).toBeTruthy();
 
-    await wrapper.find(".joinButton").trigger("click");
-    expect(mockSocket.emit).toHaveBeenCalledWith("JoinGame");
-    expect(mockSocket.emit).toHaveBeenCalledTimes(1);
-    expect(mockSocket.on).toHaveBeenCalledTimes(5);
-    expect(mockSocket.on.mock.calls[1][0]).toEqual("SendPlayers");
-    expect(mockSocket.on.mock.calls[2][0]).toEqual("SendPlayers");
-    expect(mockSocket.on.mock.calls[3][0]).toEqual("SendPlayerColor");
+    expect(mockSocket.on).toHaveBeenCalledTimes(1);
+    expect(mockSocket.on.mock.calls[0][0]).toEqual("SendPlayers");
 
-    mockSocket.on.mock.calls[1][1]([]);
-    await wrapper.vm.$nextTick();
-    expect(wrapper.findAll(".player").length).toBe(0);
-
-    mockSocket.on.mock.calls[2][1]([FAKE_PLAYERS[0], FAKE_PLAYERS[1]]);
+    mockSocket.on.mock.calls[0][1](FAKE_PLAYERS);
+    expect(wrapper.vm.players).toEqual(FAKE_PLAYERS);
 
     await wrapper.vm.$nextTick();
 
     expect(wrapper.findAll(".player").length).toBe(2);
-    expect(wrapper.vm.players).toEqual([FAKE_PLAYERS[0], FAKE_PLAYERS[1]]);
+    expect(wrapper.findAll(".player")[0].attributes().class).toContain(FAKE_PLAYERS[0].color);
+    expect(wrapper.findAll(".player")[1].attributes().class).toContain(FAKE_PLAYERS[1].color);
+  });
+
+  test("should emit joining to the game and retrieve joined players on button click", async () => {
+    const wrapper = mount(Game);
+
+    await wrapper.find(".joinButton").trigger("click");
+    expect(mockSocket.emit).toHaveBeenCalledTimes(1);
+    expect(mockSocket.emit).toHaveBeenCalledWith("JoinGame");
+
+    expect(mockSocket.on).toHaveBeenCalledTimes(3);
+    expect(mockSocket.on.mock.calls[0][0]).toEqual("SendPlayers");
+    expect(mockSocket.on.mock.calls[1][0]).toEqual("SendPlayers");
+    expect(mockSocket.on.mock.calls[2][0]).toEqual("SendPlayerColor");
+
+    mockSocket.on.mock.calls[1][1](FAKE_PLAYERS);
+
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.findAll(".player").length).toBe(2);
+    expect(wrapper.vm.players).toEqual(FAKE_PLAYERS);
     expect(wrapper.findAll(".player")[0].attributes().class).toContain(
       FAKE_PLAYERS[0].color
     );
@@ -72,7 +86,7 @@ describe("Game", () => {
     );
     expect(wrapper.vm.player.playerJoined).toBe(true);
 
-    mockSocket.on.mock.calls[3][1]("red");
+    mockSocket.on.mock.calls[2][1]("red");
     expect(wrapper.vm.player.playerColor).toBe("red");
   });
 
@@ -82,10 +96,10 @@ describe("Game", () => {
     expect(wrapper.findAll(".joinButton").length).toBe(1);
 
     await wrapper.find(".joinButton").trigger("click");
-    mockSocket.on.mock.calls[2][1]([FAKE_PLAYERS[0], FAKE_PLAYERS[1]]);
+    mockSocket.on.mock.calls[1][1](FAKE_PLAYERS);
 
     await wrapper.vm.$nextTick();
 
-    // expect(wrapper.findAll(".joinButton").length).toBe(0);
+    expect(wrapper.findAll(".joinButton").length).toBe(0);
   });
 });
