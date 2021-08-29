@@ -10,25 +10,32 @@
           Join Game
         </button>
         <Board
-          :option="generatedCard"
+          v-if="player.playerColor && !$testMode"
+          :card="generatedCard"
           :color="player.playerColor"
-          :socket="socket"
+          @setActivePlayer="setActivePlayer($event)"
         />
       </div>
-      <div class="col-4 playerArea">
-        <div class="players" v-if="players.length > 0">
-          <ul class="playersList row">
-            <li
-              v-for="player in players"
-              :key="player.id"
-              :class="[`player player--${player.color} col-6`]"
-            ></li>
-          </ul>
-        </div>
+      <div class="col-4">
+        <ul class="players d-flex m-0 p-0" v-if="players.length > 0">
+          <li
+            v-for="player in players"
+            :key="player.id"
+            :class="[
+              `player player--${player.color} ${
+                player.color === activePlayer ? 'active' : ''
+              } mt-2`,
+            ]"
+          ></li>
+        </ul>
+        <p
+          v-if="player.playerColor"
+          :class="[`player player--${player.playerColor} mt-5`]"
+        ></p>
         <button @click="generateCard()" class="my-2">Generate card</button>
         <PuntoCard
           v-if="generatedCard"
-          :option="generatedCard"
+          :card="generatedCard"
           :color="player.playerColor"
         />
       </div>
@@ -37,8 +44,6 @@
 </template>
 
 <script>
-import io from "socket.io-client";
-import env from "../environment/environment";
 import PuntoCard from "./PuntoCard";
 import Board from "./Board";
 import dictionary from "../assets/dictionaries/_socketActionsDictionary";
@@ -52,23 +57,19 @@ export default {
   },
   data() {
     return {
-      socket: {},
       players: [],
       player: {
         playerJoined: false,
         playerColor: "",
       },
       generatedCard: "",
+      activePlayer: "",
     };
-  },
-  created() {
-    const { SERVER_URL } = env;
-    this.socket = io(SERVER_URL);
   },
   mounted() {
     const { SERVER } = dictionary;
     const { SEND_PLAYERS } = SERVER;
-    this.socket.on(SEND_PLAYERS, (players) => {
+    this.$socketio.on(SEND_PLAYERS, (players) => {
       this.players = players;
     });
   },
@@ -86,14 +87,17 @@ export default {
       const { SEND_PLAYERS, SEND_PLAYER_COLOR } = SERVER;
       const { JOIN_GAME } = CLIENT;
 
-      this.socket.emit(JOIN_GAME);
-      this.socket.on(SEND_PLAYERS, (players) => {
+      this.$socketio.emit(JOIN_GAME);
+      this.$socketio.on(SEND_PLAYERS, (players) => {
         this.players = players;
         this.player.playerJoined = true;
       });
-      this.socket.on(SEND_PLAYER_COLOR, (color) => {
+      this.$socketio.on(SEND_PLAYER_COLOR, (color) => {
         this.player.playerColor = color;
       });
+    },
+    setActivePlayer(activePlayer) {
+      this.activePlayer = activePlayer;
     },
   },
 };

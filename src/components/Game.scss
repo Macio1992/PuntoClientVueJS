@@ -1,5 +1,7 @@
 @import "../assets/styles/_colors.scss";
 
+$player_size: 100px;
+$active_player_border: 5px;
 
 body {
   margin: 0;
@@ -7,30 +9,42 @@ body {
 
 .game {
   .players {
-    .playersList {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
+    list-style-type: none;
+  }
+}
 
-      .player {
-        height: 100px;
+.player {
+  width: $player_size;
+  height: $player_size;
+  border-radius: 100%;
+}
 
-        &.player--red {
-          background-color: $red_color;
-        }
+.player--red {
+  background-color: $red_color;
+}
 
-        &.player--green {
-          background-color: $green_color;
-        }
+.player--green {
+  background-color: $green_color;
+}
 
-        &.player--blue {
-          background-color: $blue_color;
-        }
+.player--blue {
+  background-color: $blue_color;
+}
 
-        &.player--orange {
-          background-color: $orange_color;
-        }
-      }
-    }
+.player--orange {
+  background-color: $orange_color;
+}
+
+.active {
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: $active_player_border;
+    background-color: $gray_color;
+    position: absolute;
+    bottom: -10px;
   }
 }
