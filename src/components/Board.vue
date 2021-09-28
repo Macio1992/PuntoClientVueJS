@@ -53,16 +53,62 @@ export default {
     });
   },
   methods: {
-    setCell(i, j) {
-      if (this.board[i][j]) {
-        const { card } = this.board[i][j];
-        const [number] = card.split("_");
-        const [cardNumber] = this.card.split("_");
+    canCardBeOverlapped(cell) {
+      const { card } = cell;
 
-        if (MAPPED_NUMBERS[cardNumber] <= MAPPED_NUMBERS[number]) {
-          return;
+      if (!card) {
+        return true;
+      }
+
+      const [number] = card.split("_");
+      const [cardNumber] = this.card.split("_");
+
+      return MAPPED_NUMBERS[cardNumber] > MAPPED_NUMBERS[number];
+    },
+    determineGameResult(colorsToDetermine) {
+      if (!colorsToDetermine.length) {
+        return;
+      }
+
+      let WINNER = false;
+      let count = 0;
+      for (let i = 0; i < 6; i++) {
+        if (
+          colorsToDetermine[i] === this.color &&
+          colorsToDetermine[i + 1] === this.color &&
+          colorsToDetermine[i] === colorsToDetermine[i + 1]
+        ) {
+          count++;
+        } else {
+          count = 0;
+        }
+
+        if (count === 3) {
+          WINNER = true;
         }
       }
+
+      return WINNER;
+    },
+    checkIfPlayerIsAWinner(ii, jj) {
+      const clickedRowColors = this.board[ii].map((c) => c.color);
+      const clickedColumnColors = [];
+      for (let i = 0; i < 6; i++) {
+        clickedColumnColors.push(this.board[i][jj].color);
+      }
+
+      if (this.determineGameResult(clickedRowColors) || this.determineGameResult(clickedColumnColors)) {
+        console.log("WINNER");
+      } else {
+        console.log("LOSER");
+      }
+    },
+    setCell(i, j) {
+      const cell = this.board[i][j];
+      if (cell && !this.canCardBeOverlapped(cell)) {
+        return;
+      }
+
       const { SERVER, CLIENT } = dictionary;
       const { SEND_BOARD_SERVER } = SERVER;
       const {
@@ -75,6 +121,7 @@ export default {
         color: this.color,
         card: this.card,
       };
+
       this.$socketio.emit(SEND_BOARD_CLIENT, this.board);
       this.$socketio.on(SEND_BOARD_SERVER, (board) => {
         this.board = board;
@@ -87,17 +134,111 @@ export default {
       });
 
       this.$socketio.emit(SEND_NEXT_PLAYER_CLIENT);
+
+      this.checkIfPlayerIsAWinner(i, j);
     },
   },
   data() {
     return {
       board: [
-        [null, null, null, null, null, null],
-        [null, null, null, null, null, null],
-        [null, null, null, null, null, null],
-        [null, null, null, null, null, null],
-        [null, null, null, null, null, null],
-        [null, null, null, null, null, null],
+        [
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+        ],
+        [
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+        ],
+        [
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+        ],
+        [
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+        ],
+        [
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+        ],
+        [
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+        ],
+      ],
+      board2: [
+        [
+          { color: "", card: "" },
+          { color: "red", card: "two_dot_card" },
+          { color: "red", card: "three_dot_card" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "green", card: "six_dot_card" },
+        ],
+        [
+          { color: "red", card: "one_dot_card" },
+          { color: "", card: "" },
+          { color: "blue", card: "three_dot_card" },
+          { color: "", card: "" },
+          { color: "blue", card: "five_dot_card" },
+          { color: "", card: "" },
+        ],
+        [
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "green", card: "three_dot_card" },
+          { color: "green", card: "four_dot_card" },
+          { color: "", card: "" },
+          { color: "green", card: "six_dot_card" },
+        ],
+        [
+          { color: "red", card: "one_dot_card" },
+          { color: "", card: "" },
+          { color: "red", card: "three_dot_card" },
+          { color: "red", card: "four_dot_card" },
+          { color: "red", card: "five_dot_card" },
+          { color: "", card: "" },
+        ],
+        [
+          { color: "", card: "" },
+          { color: "blue", card: "two_dot_card" },
+          { color: "", card: "" },
+          { color: "", card: "" },
+          { color: "blue", card: "five_dot_card" },
+          { color: "blue", card: "six_dot_card" },
+        ],
+        [
+          { color: "", card: "" },
+          { color: "green", card: "two_dot_card" },
+          { color: "green", card: "three_dot_card" },
+          { color: "", card: "" },
+          { color: "green", card: "five_dot_card" },
+          { color: "", card: "" },
+        ],
       ],
       cards: [
         "one_dot_card",
@@ -120,6 +261,7 @@ export default {
         "nine_dot_card",
       ],
       activePlayer: "",
+      colorsToDetermine: [],
     };
   },
 };

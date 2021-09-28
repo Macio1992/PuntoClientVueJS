@@ -10,7 +10,6 @@
           Join Game
         </button>
         <Board
-          v-if="player.playerColor && !$testMode"
           :card="generatedCard"
           :color="player.playerColor"
           @setActivePlayer="setActivePlayer($event)"
@@ -92,6 +91,7 @@ export default {
         this.players = players;
         this.player.playerJoined = true;
       });
+
       this.$socketio.on(SEND_PLAYER_COLOR, (color) => {
         this.player.playerColor = color;
       });
